@@ -7,30 +7,38 @@ import fr.m2i.banquethread.repositories.TransactionRepository;
 
 public class TransactionThread implements Runnable {
 
-
     TransactionRepository transactionRepository;
     CompteRepository compteRepository;
+    Compte compte;
     Transaction transaction;
 
-    public TransactionThread(TransactionRepository transactionRepository, CompteRepository compteRepository,Transaction transaction){
+    public TransactionThread(TransactionRepository transactionRepository, CompteRepository compteRepository,Compte compte,Transaction transaction){
         this.transactionRepository = transactionRepository;
         this.compteRepository = compteRepository;
+        this.compte = compte;
         this.transaction = transaction;
     }
-
 
     @Override
     public void run() {
 
-        Compte compte = transaction.getCompte();
-        System.out.println("on arrive au traitement de la transaction");
+//        System.out.println("on arrive au traitement de la transaction");
 
         synchronized (compte){
 
             compte.setSolde(compte.getSolde()+transaction.getMontant());
             compte = compteRepository.save(compte);
-            System.out.println("le compte "+compte.getName()+" passe désormais à "+compte.getSolde());
-            transactionRepository.delete(transaction);
+            System.out.println("le compte "+compte.getName()+" passe désormais à "+compte.getSolde()+" suite a l'action de "+transaction.getTitle() +" de "+transaction.getMontant());
+            if(!transaction.getReccuring()){
+                transactionRepository.delete(transaction);
+            }
+
+        }
+
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
 
     }

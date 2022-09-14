@@ -1,19 +1,19 @@
 package fr.m2i.banquethread;
 
+import fr.m2i.banquethread.entities.Compte;
 import fr.m2i.banquethread.repositories.CompteRepository;
 import fr.m2i.banquethread.repositories.TransactionRepository;
-import fr.m2i.banquethread.thread.CheckThread;
+import fr.m2i.banquethread.thread.DepenseThread;
+import fr.m2i.banquethread.thread.SalaireThread;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.ApplicationContext;
+
+import java.util.List;
 
 @SpringBootApplication
 public class BanqueThreadApplication implements CommandLineRunner {
-
-    @Autowired
-    private ApplicationContext applicationContext;
 
     @Autowired
     CompteRepository compteRepository;
@@ -26,12 +26,16 @@ public class BanqueThreadApplication implements CommandLineRunner {
     }
 
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args){
 
-        Thread checkThread = new Thread(new CheckThread(transactionRepository,compteRepository));
 
-        applicationContext.getAutowireCapableBeanFactory().autowireBean(checkThread);
+        List<Compte> comptes = compteRepository.findAll();
 
-        checkThread.start();
+        Thread salaire = new Thread(new SalaireThread(transactionRepository,compteRepository,comptes));
+        Thread depense = new Thread(new DepenseThread(transactionRepository,compteRepository,comptes));
+
+        salaire.start();
+        depense.start();
+
     }
 }

@@ -24,6 +24,8 @@ public class Transaction {
 
     private Long montant;
 
+    private Boolean reccuring;
+
     @ManyToOne
     @JoinColumn(name="compte_id")
     private Compte compte;
