@@ -3,6 +3,7 @@ package fr.m2i.banquethread;
 import fr.m2i.banquethread.entities.Compte;
 import fr.m2i.banquethread.repositories.CompteRepository;
 import fr.m2i.banquethread.repositories.TransactionRepository;
+import fr.m2i.banquethread.thread.CreditThread;
 import fr.m2i.banquethread.thread.DepenseThread;
 import fr.m2i.banquethread.thread.SalaireThread;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,9 +34,11 @@ public class BanqueThreadApplication implements CommandLineRunner {
 
         Thread salaire = new Thread(new SalaireThread(transactionRepository,compteRepository,comptes));
         Thread depense = new Thread(new DepenseThread(transactionRepository,compteRepository,comptes));
+        Thread credit = new Thread(new CreditThread(transactionRepository,compteRepository,comptes));
 
         salaire.start();
         depense.start();
+        credit.start();
 
     }
 }

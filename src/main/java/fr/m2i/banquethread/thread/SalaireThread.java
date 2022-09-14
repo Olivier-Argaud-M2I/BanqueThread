@@ -33,10 +33,10 @@ public class SalaireThread implements Runnable {
                 List<Transaction> salaires = transactionRepository.findAllByCompteAndTitle(compte,"salaire");
 
                 if(salaires.size()>0){
-                    System.out.println("actions sur le compte "+compte.getName() +" : ");
+//                    System.out.println("actions sur le compte "+compte.getName() +" : ");
                 }
                 else{
-                    System.out.println("pas d'actions a éffectuer sur le compte "+compte.getName());
+//                    System.out.println("pas d'actions a éffectuer sur le compte "+compte.getName());
                 }
 
 

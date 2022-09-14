@@ -7,14 +7,14 @@ import fr.m2i.banquethread.repositories.TransactionRepository;
 
 import java.util.List;
 
-public class DepenseThread implements Runnable {
+public class CreditThread implements Runnable {
 
 
     TransactionRepository transactionRepository;
     CompteRepository compteRepository;
     List<Compte> comptes;
 
-    public DepenseThread(TransactionRepository transactionRepository, CompteRepository compteRepository, List<Compte> comptes){
+    public CreditThread(TransactionRepository transactionRepository, CompteRepository compteRepository, List<Compte> comptes){
         this.transactionRepository = transactionRepository;
         this.compteRepository = compteRepository;
         this.comptes = comptes;
@@ -29,7 +29,7 @@ public class DepenseThread implements Runnable {
 //            System.out.println("on arrive au traitement des depenses");
 
             for (Compte compte:comptes) {
-                List<Transaction> depense = transactionRepository.findDepense(compte.getId());
+                List<Transaction> depense = transactionRepository.findCredit(compte.getId());
 
                 if(depense.size()>0){
 //                    System.out.println("actions sur le compte "+compte.getName() +" : ");
@@ -46,7 +46,7 @@ public class DepenseThread implements Runnable {
             }
 
             try {
-                Thread.sleep(10000);
+                Thread.sleep(1000);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
